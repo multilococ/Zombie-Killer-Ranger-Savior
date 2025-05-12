@@ -35,37 +35,17 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
-                },
-                {
-                    ""name"": ""Shoot"",
-                    ""type"": ""Button"",
-                    ""id"": ""f42341bc-1e4e-4bd6-bbcb-2326eadb3661"",
-                    ""expectedControlType"": ""Button"",
-                    ""processors"": """",
-                    ""interactions"": """",
-                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
                 {
                     ""name"": """",
                     ""id"": ""c4b95593-d4f5-483d-bc29-383e2971795c"",
-                    ""path"": ""<Mouse>/position"",
+                    ""path"": ""<Mouse>/delta"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": """",
                     ""action"": ""Aiming"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
-                    ""id"": ""40db5e2e-614c-4c9c-bdb3-7ea9def662fd"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Shoot"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
                 }
@@ -88,7 +68,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
         // WeaponСontrol
         m_WeaponСontrol = asset.FindActionMap("WeaponСontrol", throwIfNotFound: true);
         m_WeaponСontrol_Aiming = m_WeaponСontrol.FindAction("Aiming", throwIfNotFound: true);
-        m_WeaponСontrol_Shoot = m_WeaponСontrol.FindAction("Shoot", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -151,13 +130,11 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     private readonly InputActionMap m_WeaponСontrol;
     private List<IWeaponСontrolActions> m_WeaponСontrolActionsCallbackInterfaces = new List<IWeaponСontrolActions>();
     private readonly InputAction m_WeaponСontrol_Aiming;
-    private readonly InputAction m_WeaponСontrol_Shoot;
     public struct WeaponСontrolActions
     {
         private @InputActions m_Wrapper;
         public WeaponСontrolActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Aiming => m_Wrapper.m_WeaponСontrol_Aiming;
-        public InputAction @Shoot => m_Wrapper.m_WeaponСontrol_Shoot;
         public InputActionMap Get() { return m_Wrapper.m_WeaponСontrol; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -170,9 +147,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Aiming.started += instance.OnAiming;
             @Aiming.performed += instance.OnAiming;
             @Aiming.canceled += instance.OnAiming;
-            @Shoot.started += instance.OnShoot;
-            @Shoot.performed += instance.OnShoot;
-            @Shoot.canceled += instance.OnShoot;
         }
 
         private void UnregisterCallbacks(IWeaponСontrolActions instance)
@@ -180,9 +154,6 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
             @Aiming.started -= instance.OnAiming;
             @Aiming.performed -= instance.OnAiming;
             @Aiming.canceled -= instance.OnAiming;
-            @Shoot.started -= instance.OnShoot;
-            @Shoot.performed -= instance.OnShoot;
-            @Shoot.canceled -= instance.OnShoot;
         }
 
         public void RemoveCallbacks(IWeaponСontrolActions instance)
@@ -221,6 +192,5 @@ public partial class @InputActions: IInputActionCollection2, IDisposable
     public interface IWeaponСontrolActions
     {
         void OnAiming(InputAction.CallbackContext context);
-        void OnShoot(InputAction.CallbackContext context);
     }
 }

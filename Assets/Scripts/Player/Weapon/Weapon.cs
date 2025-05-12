@@ -4,19 +4,20 @@ namespace Player
 {
     public class Weapon : MonoBehaviour
     {
-        private RaycastHit _hit;
+        [SerializeField] private Transform _shootingPosition;
+        [SerializeField] private LayerMask _layerMask;
 
-        public void SetRaycastHit(RaycastHit hitInfo)
+        public void Shooting() 
         {
-            _hit = hitInfo;
-        }
+            Ray ray = new Ray(_shootingPosition.position, _shootingPosition.forward);
 
-        public void Shoot()
-        {
-            Debug.Log("Shoot");
-
-            if (_hit.collider.TryGetComponent<Enemy>(out Enemy enemy))
-                Debug.Log("This was enemy " + enemy.name);
+            if (Physics.Raycast(ray, out RaycastHit hitInfo,Mathf.Infinity, _layerMask, QueryTriggerInteraction.Ignore))
+            {
+                if (hitInfo.collider.TryGetComponent<Enemy>(out Enemy enemy))
+                {
+                    Debug.Log("Shoot on " + enemy.name);
+                }
+            }
         }
     }
 }
