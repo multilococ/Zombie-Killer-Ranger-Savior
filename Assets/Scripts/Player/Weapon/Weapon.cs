@@ -6,6 +6,7 @@ namespace Player
     {
         [SerializeField] private Transform _shootingPosition;
         [SerializeField] private LayerMask _layerMask;
+        [SerializeField] private float _damage = 10;
 
         public void Shooting() 
         {
@@ -13,9 +14,9 @@ namespace Player
 
             if (Physics.Raycast(ray, out RaycastHit hitInfo,Mathf.Infinity, _layerMask, QueryTriggerInteraction.Ignore))
             {
-                if (hitInfo.collider.TryGetComponent<Enemy>(out Enemy enemy))
+                if (hitInfo.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
                 {
-                    Debug.Log("Shoot on " + enemy.name);
+                    damageable.TakeDamage(_damage);
                 }
             }
         }
