@@ -12,6 +12,7 @@ namespace Player
         [SerializeField] private float _damage = 10;
         [SerializeField] private float _reloadTime = 3f;
         [SerializeField] private float _timeBetweenShots = 1f;
+        [SerializeField] private Transform _weaponTransform;
 
         private WaitForSeconds _waitReloadTime;
         private WaitForSeconds _waitBetweenShots;
@@ -23,6 +24,7 @@ namespace Player
         private bool _isAvailiable;
 
         public event Action<int> AmmoChanged;
+        public event Action Shooted;
 
         private void Awake()
         {
@@ -38,15 +40,19 @@ namespace Player
 
             if (Physics.Raycast(ray, out RaycastHit hitInfo,Mathf.Infinity, _layerMask, QueryTriggerInteraction.Ignore))
             {
+                _weaponTransform.LookAt(hitInfo.point);
+
                 if (hitInfo.collider.TryGetComponent<IDamageable>(out IDamageable damageable))
                 {
                     if (_currentAmmo > 0 && _isAvailiable)
                     {
+                        Shooted?.Invoke();
                         _isAvailiable = false;
                         _currentAmmo--;
                         AmmoChanged?.Invoke(_currentAmmo);
                         damageable.TakeDamage(_damage);
-                        StartCoroutine(DelayBetweenShoots());    
+                        StartCoroutine(DelayBetweenShoots());
+                       
                     }
                     else if (_currentAmmo == 0 && _reloadCoroutine == null)
                     { 

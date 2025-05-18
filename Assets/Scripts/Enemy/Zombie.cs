@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 
 [RequireComponent(typeof(Rigidbody))]
@@ -51,5 +52,13 @@ public class Zombie : MonoBehaviour
         _isALive = false;
         _mover.StopMoving(_rigidbody);
         _animatorHandler.PlayDeathAnimation();
+        StartCoroutine(DelayDeath());
+    }
+
+    private IEnumerator DelayDeath() 
+    {
+        yield return new WaitForSeconds(3f);
+
+        gameObject.SetActive(false);
     }
 }
