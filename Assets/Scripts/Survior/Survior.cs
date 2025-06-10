@@ -34,6 +34,11 @@ public class Survior : MonoBehaviour, IDamageable
             _mover.MoveTo(_destinationPoint, _transform, _rigidbody);
     }
 
+    public void EnableInvulnerability()
+    {
+        _health.EnableInvulnerability();
+    }
+
     public void TakeDamage(float damage)
     {
         _health.TakeDamage(damage);
