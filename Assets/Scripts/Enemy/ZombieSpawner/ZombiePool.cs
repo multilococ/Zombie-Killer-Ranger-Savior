@@ -1,18 +1,46 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Pool;
 
 public class ZombiePool : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private Zombie _zombiePrefab;
+    [SerializeField] private Survior _survior;
+
+    private ObjectPool<Zombie> _pool;
+
+    private int _poolCapacity = 10;
+    private int _poolMaxSize = 10;
+
+    private void Awake()
     {
-        
+        _pool = CreatePool();
     }
 
-    // Update is called once per frame
-    void Update()
+    public void SpawnZombieIn(Vector3 point) 
     {
-        
+        Zombie zombie = _pool.Get();
+
+        zombie.Init(point,_survior);
+        zombie.Died += ReleaseZombie;
     }
-}
+
+    private ObjectPool<Zombie> CreatePool()
+    {
+        return new ObjectPool<Zombie>
+            (
+                createFunc: () => Instantiate(_zombiePrefab),
+                actionOnRelease: (zombie) => zombie.gameObject.SetActive(false),
+                actionOnGet: (zombie) => zombie.gameObject.SetActive(true),
+                actionOnDestroy: (zombie) => Destroy(zombie.gameObject),
+                collectionCheck: true,
+                defaultCapacity: _poolCapacity,
+                maxSize: _poolMaxSize
+            ) ;
+    }
+
+    private void ReleaseZombie(Zombie zombie) 
+    {
+        zombie.Died -= ReleaseZombie;
+        _pool.Release(zombie);
+    }
+}   

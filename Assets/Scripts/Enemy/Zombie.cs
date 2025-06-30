@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -14,6 +15,8 @@ public class Zombie : MonoBehaviour
     private Transform _tramsform;
 
     private bool _isALive;
+
+    public event Action<Zombie> Died;
 
     private void OnEnable()
     {
@@ -41,6 +44,13 @@ public class Zombie : MonoBehaviour
         }
     }
 
+    public void Init(Vector3 position, Survior survior) 
+    {
+        _tramsform.position = position;
+        _survior = survior;
+        _isALive = true;
+    }
+
     private void Attack() 
     {
         _zombieHand.Attack(_survior);
@@ -59,6 +69,6 @@ public class Zombie : MonoBehaviour
     {
         yield return new WaitForSeconds(3f);
 
-        gameObject.SetActive(false);
+        Died?.Invoke(this);
     }
 }
