@@ -39,10 +39,11 @@ public class ZombieSpawner : MonoBehaviour
     {
         foreach (ZombieSpawnPoint zombieSpawnPoint in _zombieSpawnPoints)
         {
-            if (zombieSpawnPoint.IsActive == true)
+            if (zombieSpawnPoint.IsActive == true && zombieSpawnPoint.IsCanSpawnZombie)
             {
                 Debug.Log("Spawn");
                 _zombiePool.SpawnZombieIn(zombieSpawnPoint.Position);
+                zombieSpawnPoint.IncreseSpawnCounter();
             }
         }
     }

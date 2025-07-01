@@ -9,6 +9,7 @@ public class Health : MonoBehaviour
     private bool _isInvulnerable;
 
     public event Action Died;
+    public event Action<float> DamageTaked;
 
     private void Awake()
     {
@@ -30,7 +31,7 @@ public class Health : MonoBehaviour
     {
         if (_isInvulnerable != true)
         {
-            if (_currentValue >= 0)
+            if (_currentValue > 0)
             {
                 _currentValue -= damage;
 
@@ -40,6 +41,8 @@ public class Health : MonoBehaviour
                     _currentValue = 0;
                     Died?.Invoke();
                 }
+
+                DamageTaked?.Invoke(damage);
 
                 Debug.Log(gameObject.name + " Health : " + _currentValue);
             }

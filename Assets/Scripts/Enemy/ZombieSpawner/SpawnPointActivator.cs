@@ -11,6 +11,10 @@ public class SpawnPointActivator : MonoBehaviour
     private Transform _transform;
     private Coroutine _coroutine;
 
+    private int _maxActivationCount = 1000;
+
+    public float SpehreRadius => _sphereRadius;
+
     private void Awake()
     {
         _transform = transform;
@@ -37,15 +41,18 @@ public class SpawnPointActivator : MonoBehaviour
 
     private IEnumerator ActivatePoints()
     {
-        yield return _waitForSeconds;
-
-        Collider[] colliders = Physics.OverlapSphere(_transform.position, _sphereRadius, _spanwPointMask);
-
-        foreach (Collider collider in colliders)
+        for (int i = 0; i < _maxActivationCount; i++)
         {
-            if (collider.TryGetComponent(out ZombieSpawnPoint zombieSpawnPoint))
+            yield return _waitForSeconds;
+
+            Collider[] colliders = Physics.OverlapSphere(_transform.position, _sphereRadius, _spanwPointMask);
+
+            foreach (Collider collider in colliders)
             {
-                zombieSpawnPoint.Activate();
+                if (collider.TryGetComponent(out ZombieSpawnPoint zombieSpawnPoint))
+                {
+                        zombieSpawnPoint.Activate();
+                }
             }
         }
     }

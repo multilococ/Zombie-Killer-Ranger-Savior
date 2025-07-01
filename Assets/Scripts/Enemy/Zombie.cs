@@ -63,6 +63,7 @@ public class Zombie : MonoBehaviour
         _mover.StopMoving(_rigidbody);
         _animatorHandler.PlayDeathAnimation();
         StartCoroutine(DelayDeath());
+
     }
 
     private IEnumerator DelayDeath() 

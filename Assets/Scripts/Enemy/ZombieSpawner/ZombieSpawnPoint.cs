@@ -4,9 +4,13 @@ using UnityEngine;
 public class ZombieSpawnPoint : MonoBehaviour
 {
     [SerializeField] private float _lifeTime = 5f;
+    [SerializeField] private int _maxSpawnZombie = 3;
+
+    private int _spawnedZombieCounter;
 
     private WaitForSeconds _waitForSeconds;
 
+    public bool IsCanSpawnZombie => _spawnedZombieCounter < _maxSpawnZombie;
     public Vector3 Position { get; private set; }
     public bool IsActive { get; private set; }
 
@@ -19,8 +23,14 @@ public class ZombieSpawnPoint : MonoBehaviour
         IsActive = false;
     }
 
+    public void IncreseSpawnCounter() 
+    {
+        _spawnedZombieCounter++;
+    }
+
     public void Activate()
     {
+        _spawnedZombieCounter = 0;
         IsActive = true;
 
         if (_coroutine != null)
