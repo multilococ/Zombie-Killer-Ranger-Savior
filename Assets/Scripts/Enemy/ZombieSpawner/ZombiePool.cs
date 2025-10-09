@@ -1,15 +1,23 @@
+
 using UnityEngine;
 using UnityEngine.Pool;
+using Zenject;
 
 public class ZombiePool : MonoBehaviour
 {
     [SerializeField] private Zombie _zombiePrefab;
-    [SerializeField] private Survior _survior;
-
+    
+    private Survior _survior;
     private ObjectPool<Zombie> _pool;
 
     private int _poolCapacity = 10;
     private int _poolMaxSize = 10;
+
+    [Inject]
+    private void Construct(Survior survior)
+    {
+        _survior = survior;
+    }
 
     private void Awake()
     {

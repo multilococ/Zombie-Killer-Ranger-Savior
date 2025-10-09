@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class ZombieHand : MonoBehaviour
+public class ZombieWeapon : MonoBehaviour
 {
     [SerializeField] private float _damage = 35f;
     [SerializeField] private float _timeBetweenAttack = 2f;

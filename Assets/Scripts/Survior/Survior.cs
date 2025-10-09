@@ -1,4 +1,5 @@
 using UnityEngine;
+using Zenject;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Survior : MonoBehaviour, IDamageable
@@ -12,6 +13,12 @@ public class Survior : MonoBehaviour, IDamageable
     private Transform _transform;
 
     private bool _isALive = true;
+
+    [Inject]
+    private void Construct(Transform destinationPoint) 
+    {
+        _destinationPoint = destinationPoint;
+    }
 
     private void OnEnable()
     {

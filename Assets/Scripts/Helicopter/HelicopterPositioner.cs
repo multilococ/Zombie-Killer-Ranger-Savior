@@ -1,11 +1,18 @@
 using UnityEngine;
+using Zenject;
 
 public class HelicopterPositioner : MonoBehaviour
 {
-    [SerializeField] private Transform _surviorTransform;
+    private Transform _surviorTransform;
 
     private Transform _transform;
     private Vector3 _offset;
+
+    [Inject]
+    private void Construct(Survior survior) 
+    {
+        _surviorTransform = survior.transform;
+    }
 
     private void Awake()
     {

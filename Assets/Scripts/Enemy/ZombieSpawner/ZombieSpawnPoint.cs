@@ -4,7 +4,7 @@ using UnityEngine;
 public class ZombieSpawnPoint : MonoBehaviour
 {
     [SerializeField] private float _lifeTime = 5f;
-    [SerializeField] private int _maxSpawnZombie = 3;
+    [SerializeField] private int _maxSpawnZombie = 2;
 
     private int _spawnedZombieCounter;
 

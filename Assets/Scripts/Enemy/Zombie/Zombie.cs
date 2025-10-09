@@ -1,16 +1,20 @@
 using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.AI;
 
 [RequireComponent(typeof(Rigidbody))]
 public class Zombie : MonoBehaviour
 {
-    [SerializeField] private Mover _mover;
+    private const float DeathTime = 3f;
+
+    [SerializeField] private DistanceMeter _distanceMeter;
     [SerializeField] private Survior _survior;
     [SerializeField] private Rigidbody _rigidbody;
     [SerializeField] private Health _health;
-    [SerializeField] private ZombieHand _zombieHand;
+    [SerializeField] private ZombieWeapon _zombieHand;
     [SerializeField] private ZombieAnimatorHandler _animatorHandler;
+    [SerializeField] private NavMeshAgent _navMeshAgent;
 
     private Transform _tramsform;
 
@@ -21,13 +25,13 @@ public class Zombie : MonoBehaviour
     private void OnEnable()
     {
         _health.Died += Die;
-        _mover.EnoughClosed += Attack;
+        _distanceMeter.IsGotClose += Attack;
     }
 
     private void OnDisable()
     {
         _health.Died -= Die;
-        _mover.EnoughClosed -= Attack;
+        _distanceMeter.IsGotClose -= Attack;
     }
 
     private void Awake()
@@ -40,7 +44,8 @@ public class Zombie : MonoBehaviour
     {
         if (_isALive)
         {
-            _mover.MoveTo(_survior.transform, _tramsform, _rigidbody);
+            _distanceMeter.Measure();
+            _navMeshAgent.SetDestination(_survior.transform.position);
         }
     }
 
@@ -48,6 +53,7 @@ public class Zombie : MonoBehaviour
     {
         _tramsform.position = position;
         _survior = survior;
+        _distanceMeter.SetTarget(_survior.transform);
         _isALive = true;
     }
 
@@ -60,15 +66,15 @@ public class Zombie : MonoBehaviour
     private void Die()
     {
         _isALive = false;
-        _mover.StopMoving(_rigidbody);
+        _navMeshAgent.Stop();
+        _rigidbody.velocity = Vector3.zero;
         _animatorHandler.PlayDeathAnimation();
         StartCoroutine(DelayDeath());
-
     }
 
     private IEnumerator DelayDeath() 
     {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(DeathTime);
 
         Died?.Invoke(this);
     }
